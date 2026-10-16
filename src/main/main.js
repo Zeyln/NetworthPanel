@@ -202,6 +202,7 @@ function createWindow() {
     minWidth: 900,
     minHeight: 600,
     backgroundColor: '#0e1116',
+    icon: path.join(__dirname, '..', 'assets', 'icon.png'),
     autoHideMenuBar: true,
     title: 'Networth Panel',
     webPreferences: {

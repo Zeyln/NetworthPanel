@@ -27,6 +27,7 @@ package() {
   chmod 755 "$pkgdir/usr/bin/$pkgname"
 
   install -Dm644 packaging/aur/networthpanel.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 src/assets/icon.png "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
   install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

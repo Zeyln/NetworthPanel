@@ -26,6 +26,7 @@
   "build": {
     "appId": "io.github.zeyln.networthpanel",
     "productName": "Networth Panel",
+    "icon": "build/icon.png",
     "files": [
       "src/**/*",
       "package.json"

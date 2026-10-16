@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#222b38"/>
+      <stop offset="1" stop-color="#0e1116"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f2b33d" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#f2b33d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="32" y="32" width="960" height="960" rx="216" fill="url(#bg)"/>
+  <rect x="32" y="32" width="960" height="960" rx="216" fill="none" stroke="#3a4555" stroke-width="8"/>
+  <circle cx="512" cy="500" r="380" fill="url(#glow)"/>
+  <!-- crown -->
+  <polygon points="360,262 220,436 410,436" fill="#f8d27a"/>
+  <polygon points="360,262 664,262 614,436 410,436" fill="#ffe7a8"/>
+  <polygon points="664,262 804,436 614,436" fill="#f2b33d"/>
+  <!-- pavilion -->
+  <polygon points="220,436 410,436 512,820" fill="#eaa632"/>
+  <polygon points="410,436 614,436 512,820" fill="#f6c25a"/>
+  <polygon points="614,436 804,436 512,820" fill="#c27f17"/>
+  <!-- girdle highlight -->
+  <polyline points="220,436 804,436" stroke="#fff3cf" stroke-width="6" stroke-opacity="0.6"/>
+</svg>
