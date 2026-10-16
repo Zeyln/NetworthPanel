@@ -1,71 +1,105 @@
 # Networth Panel
 
-Electron desktop app that estimates a Hypixel SkyBlock player's networth. Search a username, pick a profile, and every coin, item, pet, sack, essence and museum donation is priced from live market data.
+See what any Hypixel SkyBlock player is worth. Type a username and Networth Panel adds up their coins, items, pets, sacks, essence and museum, priced from live Bazaar and Auction House data.
 
-## Running
+## Install
 
+Download from the **[latest release](https://github.com/Zeyln/NetworthPanel/releases/latest)**.
+
+### Windows
+
+1. Download `NetworthPanel-Setup-<version>.exe` and run it.
+2. If Windows shows **"Windows protected your PC"**, click **More info → Run anyway**. The app isn't code-signed, so Windows doesn't recognise it yet.
+
+Prefer not to install anything? Download `NetworthPanel-Portable-<version>.exe` instead and run it directly.
+
+### Ubuntu / Debian
+
+Download `networth-panel_<version>_amd64.deb`, then:
+
+```sh
+sudo apt install ./networth-panel_*_amd64.deb
 ```
+
+Open **Networth Panel** from your app menu.
+
+### Arch Linux
+
+Install from the [AUR](https://aur.archlinux.org/packages/networthpanel) with your AUR helper:
+
+```sh
+yay -S networthpanel
+```
+
+Then run `networthpanel` or open it from your app menu.
+
+## Getting started
+
+The app needs a free Hypixel API key to read player profiles.
+
+1. Go to the [Hypixel Developer Dashboard](https://developer.hypixel.net/) and sign in with your Minecraft account.
+2. Copy your API key.
+3. In Networth Panel, click **⚙** (top right), paste the key and click **Save**.
+4. Type a username and press **Look up**.
+
+The key is stored encrypted on your computer and is only ever sent to Hypixel.
+
+## Using it
+
+- **Profile:** players with several SkyBlock profiles get a dropdown under their name. It opens on the profile they're currently playing.
+- **Networth** is everything combined. **Tradeable** leaves out what can't be sold: soulbound items, museum donations and essence.
+- **Categories** on the left (Inventory, Pets, Sacks…) filter the item list. Click any item to see how its value was calculated.
+- **Prices** update by themselves every 15 minutes. Click **Refresh prices** at the top for fresh numbers right away.
+- **Bazaar price setting** (in ⚙) chooses between conservative (instant-sell), midpoint (default) and optimistic (instant-buy) bazaar prices.
+
+## Troubleshooting
+
+| Problem | Fix |
+| --- | --- |
+| "Hypixel rejected the API key" | Development keys expire after a few days. Get a new one from the dashboard and paste it in ⚙. |
+| "Inventory API is disabled" / "Banking API is disabled" | The player has hidden that data. In SkyBlock they can turn it on under **SkyBlock Menu → Settings → API Settings**. |
+| "Rate limited" | Wait a minute and try again. |
+| An item shows **No price** | Nobody is selling it right now, so it counts as 0. |
+| Numbers look different from other sites | Every networth tool prices upgrades a little differently. See [How values are calculated](#how-values-are-calculated). |
+
+## How values are calculated
+
+- **Base price:** the Bazaar price if the item trades there, otherwise the cheapest Buy It Now listing on the Auction House, otherwise its NPC sell price.
+- **Upgrades:** enchantments, potato books, recombobulators, reforges, gemstones, stars, scrolls and similar add part of their own market price. Upgrades can't be taken off again, so buyers rarely pay full price for them.
+- **Pets:** priced between their level 1 and max-level Auction House prices according to XP, plus their held item and skin.
+
+Limitations: rare variants (such as perfect-quality dungeon drops) are valued like normal copies, and Kuudra attributes and Rift items aren't counted.
+
+## For developers
+
+Run from source (requires [Node.js](https://nodejs.org/) 20+):
+
+```sh
 npm install
 npm start
 ```
 
-Or download a build from [Releases](https://github.com/Zeyln/NetworthPanel/releases):
+Build installers: `npm run dist:win` (Windows) or `npm run dist:ubuntu` (Linux). The AUR package recipe lives in [`packaging/aur/`](packaging/aur).
 
-| Platform | File | Install |
-| --- | --- | --- |
-| Windows | `NetworthPanel-Setup-x.y.z.exe` | Run the installer. Builds aren't code-signed, so SmartScreen warns on first launch (More info → Run anyway). |
-| Windows (portable) | `NetworthPanel-Portable-x.y.z.exe` | Run directly, no install. |
-| Ubuntu / Debian | `networth-panel_x.y.z_amd64.deb` | `sudo apt install ./networth-panel_x.y.z_amd64.deb` |
+**Releasing:** push a version tag, e.g. `git tag v0.3.0 && git push origin v0.3.0`. GitHub Actions builds and tests the Windows and Ubuntu packages and attaches them to a release. It also builds and launch-tests the Arch package, then pushes the PKGBUILD to the AUR (needs the `AUR_SSH_PRIVATE_KEY` repository secret). Pushes to `main` run the same builds and tests without publishing.
 
-**Arch Linux:** install from the [AUR](https://aur.archlinux.org/packages/networthpanel) with an AUR helper, e.g. `yay -S networthpanel` or `paru -S networthpanel`. It runs on Arch's own `electron44` package. No Arch package files are published here; the PKGBUILD lives in [`packaging/aur/`](packaging/aur) and is pushed to the AUR on each release.
-
-To publish a release, push a version tag: `git tag v0.2.0 && git push origin v0.2.0`. The workflow then:
-
-1. builds the Windows installers and the `.deb`, and test-installs the `.deb` on Ubuntu 24.04,
-2. builds the AUR package in an Arch container, installs it and launches the app under a virtual display,
-3. pushes the updated PKGBUILD to the AUR (needs the `AUR_SSH_PRIVATE_KEY` repository secret),
-4. attaches the Windows and Ubuntu files to a GitHub release.
-
-Every push to `main` runs steps 1–2 without publishing. Locally: `npm run dist:win` or `dist:ubuntu` (the latter needs Linux).
-
-Profile data needs a Hypixel API key (create one at https://developer.hypixel.net/). Paste it in **Settings** (⚙). It's stored encrypted with the OS keychain (DPAPI on Windows) in the app's user-data folder. `HYPIXEL_API_KEY` in the environment also works.
-
-## How prices are estimated
-
-Prices refresh on launch and every 15 minutes (or on demand), and are cached to disk:
-
-| Source | Used for |
-| --- | --- |
-| Bazaar (`/skyblock/bazaar`) | Anything tradeable on the bazaar: enchanted books, gems, essence, upgrades. Midpoint of instant-buy and instant-sell by default (configurable). |
-| Auction house (`/skyblock/auctions`, every page) | Lowest BIN per item. Pets are bucketed by type, rarity and level (level ≤ 10 vs max level); books, runes, cakes and party hats get their own keys. |
-| Item catalogue (`/resources/skyblock/items`) | NPC sell price fallback, star costs, gemstone slot unlock costs, names and rarities. |
-
-An item's value is its base price plus each upgrade applied to it, times how much of that upgrade's price survives once applied (`WORTH` in `src/main/core/networth.js`). Covered upgrades: enchantments, hot/fuming potato books, recombobulator, reforge stones, gemstones and slot unlocks, essence and master stars, Art of War/Peace, Hyperion scrolls, power scrolls, drill parts, dyes, skins, enrichments, Divan coating, Jalapeño/Polarvoid books, Pulse Ring charge and more.
-
-Pet value is interpolated by XP between the level-1 and max-level lowest BIN, plus held item and skin, minus a penalty for candied pets.
-
-"Tradeable" excludes soulbound items, museum donations and essence.
-
-## Layout
+<details>
+<summary>Code layout</summary>
 
 ```
 src/main/main.js          window, IPC, settings, price cache
 src/main/preload.js       renderer bridge (window.api)
-src/main/core/            Electron-free engine
+src/main/core/            pricing engine (no Electron dependency)
   hypixel.js              API client (Mojang, Hypixel)
-  nbt.js                  NBT decoder for item blobs
-  prices.js               bazaar + auction snapshot, PriceBook
+  nbt.js                  item data decoder
+  prices.js               bazaar + auction price snapshot
   keys.js                 item -> price key mapping
   pets.js                 pet XP/level math
-  networth.js             valuation
-src/renderer/             UI
+  networth.js             valuation and upgrade weights (WORTH)
+src/renderer/             user interface
 ```
 
-## Known gaps
-
-- Lowest BIN reflects the cheapest listing, which is usually a clean copy. Rare variants (perfect-quality dungeon drops, special editions) are valued as the base item plus upgrades.
-- Reforge stones not in NEU's reforge table, Kuudra attributes and Rift items aren't valued.
-- Items with no bazaar, auction or NPC price count as 0 and are listed as "No price".
+</details>
 
 ## License
 
