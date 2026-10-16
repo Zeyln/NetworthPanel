@@ -9,6 +9,10 @@ npm install
 npm start
 ```
 
+Or download a Windows build from [Releases](https://github.com/Zeyln/NetworthPanel/releases): `NetworthPanel-Setup-x.y.z.exe` installs the app, `NetworthPanel-Portable-x.y.z.exe` runs without installing. The builds aren't code-signed, so Windows SmartScreen will warn on first launch (More info → Run anyway).
+
+To publish a release, push a version tag: `git tag v0.1.0 && git push origin v0.1.0`. The workflow builds both executables and attaches them to a GitHub release. Every push to `main` also builds them as a downloadable workflow artifact. `npm run dist` builds the same files locally into `dist/`.
+
 Profile data needs a Hypixel API key (create one at https://developer.hypixel.net/). Paste it in **Settings** (⚙). It's stored encrypted with the OS keychain (DPAPI on Windows) in the app's user-data folder. `HYPIXEL_API_KEY` in the environment also works.
 
 ## How prices are estimated

@@ -2,12 +2,54 @@
   "name": "networth-panel",
   "version": "0.1.0",
   "description": "Hypixel SkyBlock networth estimator: look up a player and value everything they own from live bazaar and auction-house prices.",
+  "author": "Zeyln",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zeyln/NetworthPanel.git"
+  },
   "main": "src/main/main.js",
   "private": true,
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder --win --publish never"
   },
   "devDependencies": {
-    "electron": "^44.8.0"
+    "electron": "^44.8.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "io.github.zeyln.networthpanel",
+    "productName": "Networth Panel",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "NetworthPanel-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "NetworthPanel-Portable-${version}.${ext}"
+    }
   }
 }
