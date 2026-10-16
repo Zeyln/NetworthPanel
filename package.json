@@ -1,0 +1,13 @@
+{
+  "name": "networth-panel",
+  "version": "0.1.0",
+  "description": "Hypixel SkyBlock networth estimator: look up a player and value everything they own from live bazaar and auction-house prices.",
+  "main": "src/main/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^44.8.0"
+  }
+}

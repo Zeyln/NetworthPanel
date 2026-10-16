@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' https://mc-heads.net; style-src 'self'; script-src 'self'">
+  <title>Networth Panel</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◆</span>
+      <span>Networth Panel</span>
+    </div>
+    <form id="search" class="search" autocomplete="off">
+      <input id="username" type="text" placeholder="Minecraft username" maxlength="16" spellcheck="false" required>
+      <button type="submit" id="search-btn">Look up</button>
+    </form>
+    <button id="settings-btn" class="icon-btn" title="Settings" aria-label="Settings">⚙</button>
+  </header>
+
+  <div class="pricebar">
+    <span id="price-text">Loading prices…</span>
+    <div id="price-progress" class="progress" hidden><div></div></div>
+    <button id="price-refresh" class="link-btn">Refresh prices</button>
+  </div>
+
+  <main id="main">
+    <section id="empty" class="empty">
+      <h1>Look up a SkyBlock player</h1>
+      <p>Enter a username to estimate their networth: coins, every item they own, pets, sacks, essence and museum donations, priced from live bazaar and auction-house data.</p>
+      <p id="key-hint" class="callout" hidden>You need a Hypixel API key first. <button class="link-btn" data-open-settings>Open settings</button></p>
+    </section>
+
+    <section id="loading" class="loading" hidden>
+      <div class="spinner"></div>
+      <span id="loading-text">Loading…</span>
+    </section>
+
+    <section id="error" class="error" hidden></section>
+
+    <section id="result" hidden>
+      <div class="summary">
+        <div class="player">
+          <img id="avatar" alt="" width="72" height="72">
+          <div>
+            <div class="player-name" id="player-name"></div>
+            <div class="player-meta">
+              <select id="profile-select" aria-label="Profile"></select>
+              <span id="profile-badges"></span>
+            </div>
+          </div>
+        </div>
+        <div class="totals">
+          <div class="total">
+            <div class="label">Networth</div>
+            <div class="value" id="total"></div>
+          </div>
+          <div class="total secondary">
+            <div class="label" title="Excludes soulbound items, museum donations and essence">Tradeable</div>
+            <div class="value" id="unsoulbound"></div>
+          </div>
+          <div class="total secondary">
+            <div class="label">Coins</div>
+            <div class="value" id="coins"></div>
+            <div class="sub" id="coins-detail"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="warnings" class="warnings" hidden></div>
+
+      <div class="layout">
+        <div id="categories" class="categories"></div>
+        <div class="detail">
+          <div class="detail-head">
+            <h2 id="detail-title"></h2>
+            <input id="filter" type="search" placeholder="Filter items" spellcheck="false">
+          </div>
+          <div id="items" class="items"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="settings">
+    <form method="dialog" id="settings-form">
+      <h2>Settings</h2>
+      <label>
+        Hypixel API key
+        <input id="api-key" type="password" placeholder="Paste a new key" spellcheck="false">
+        <small id="api-key-status"></small>
+        <small>Get a key from the <a href="https://developer.hypixel.net/" target="_blank">Hypixel developer dashboard</a>. It's stored encrypted on this machine.</small>
+      </label>
+      <label>
+        Bazaar price
+        <select id="bazaar-mode">
+          <option value="mid">Midpoint of buy and sell</option>
+          <option value="sell">Instant-sell (conservative)</option>
+          <option value="buy">Instant-buy (optimistic)</option>
+        </select>
+      </label>
+      <div class="dialog-actions">
+        <button type="button" id="settings-cancel" class="secondary-btn">Cancel</button>
+        <button type="submit" id="settings-save">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="format.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
