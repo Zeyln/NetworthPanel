@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Networth Panel
+Comment=Estimate a Hypixel SkyBlock player's networth
+Exec=networthpanel %U
+Terminal=false
+Categories=Game;Utility;

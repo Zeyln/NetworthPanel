@@ -9,9 +9,24 @@ npm install
 npm start
 ```
 
-Or download a Windows build from [Releases](https://github.com/Zeyln/NetworthPanel/releases): `NetworthPanel-Setup-x.y.z.exe` installs the app, `NetworthPanel-Portable-x.y.z.exe` runs without installing. The builds aren't code-signed, so Windows SmartScreen will warn on first launch (More info → Run anyway).
+Or download a build from [Releases](https://github.com/Zeyln/NetworthPanel/releases):
 
-To publish a release, push a version tag: `git tag v0.1.0 && git push origin v0.1.0`. The workflow builds both executables and attaches them to a GitHub release. Every push to `main` also builds them as a downloadable workflow artifact. `npm run dist` builds the same files locally into `dist/`.
+| Platform | File | Install |
+| --- | --- | --- |
+| Windows | `NetworthPanel-Setup-x.y.z.exe` | Run the installer. Builds aren't code-signed, so SmartScreen warns on first launch (More info → Run anyway). |
+| Windows (portable) | `NetworthPanel-Portable-x.y.z.exe` | Run directly, no install. |
+| Ubuntu / Debian | `networth-panel_x.y.z_amd64.deb` | `sudo apt install ./networth-panel_x.y.z_amd64.deb` |
+
+**Arch Linux:** install from the [AUR](https://aur.archlinux.org/packages/networthpanel) with an AUR helper, e.g. `yay -S networthpanel` or `paru -S networthpanel`. It runs on Arch's own `electron44` package. No Arch package files are published here; the PKGBUILD lives in [`packaging/aur/`](packaging/aur) and is pushed to the AUR on each release.
+
+To publish a release, push a version tag: `git tag v0.2.0 && git push origin v0.2.0`. The workflow then:
+
+1. builds the Windows installers and the `.deb`, and test-installs the `.deb` on Ubuntu 24.04,
+2. builds the AUR package in an Arch container, installs it and launches the app under a virtual display,
+3. pushes the updated PKGBUILD to the AUR (needs the `AUR_SSH_PRIVATE_KEY` repository secret),
+4. attaches the Windows and Ubuntu files to a GitHub release.
+
+Every push to `main` runs steps 1–2 without publishing. Locally: `npm run dist:win` or `dist:ubuntu` (the latter needs Linux).
 
 Profile data needs a Hypixel API key (create one at https://developer.hypixel.net/). Paste it in **Settings** (⚙). It's stored encrypted with the OS keychain (DPAPI on Windows) in the app's user-data folder. `HYPIXEL_API_KEY` in the environment also works.
 
@@ -51,3 +66,7 @@ src/renderer/             UI
 - Lowest BIN reflects the cheapest listing, which is usually a clean copy. Rare variants (perfect-quality dungeon drops, special editions) are valued as the base item plus upgrades.
 - Reforge stones not in NEU's reforge table, Kuudra attributes and Rift items aren't valued.
 - Items with no bazaar, auction or NPC price count as 0 and are listed as "No price".
+
+## License
+
+[MIT](LICENSE)

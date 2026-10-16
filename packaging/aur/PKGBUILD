@@ -1,0 +1,32 @@
+# Maintainer: Zeyln <180023493+Zeyln@users.noreply.github.com>
+# Source of truth: https://github.com/Zeyln/NetworthPanel/tree/main/packaging/aur
+# CI updates pkgver/sha256sums and pushes this file to the AUR on each release tag.
+
+pkgname=networthpanel
+pkgver=0.2.0
+pkgrel=1
+_electron=electron44
+pkgdesc='Hypixel SkyBlock networth estimator using live bazaar and auction-house prices'
+arch=('any')
+url='https://github.com/Zeyln/NetworthPanel'
+license=('MIT')
+depends=("$_electron")
+optdepends=('libsecret: store the Hypixel API key encrypted in the system keyring')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+package() {
+  cd "NetworthPanel-$pkgver"
+
+  # The app has no runtime npm dependencies, so it runs directly on the system Electron.
+  install -d "$pkgdir/usr/lib/$pkgname"
+  cp -r src package.json "$pkgdir/usr/lib/$pkgname/"
+
+  install -d "$pkgdir/usr/bin"
+  sed "s/@ELECTRON@/$_electron/" packaging/aur/networthpanel.sh > "$pkgdir/usr/bin/$pkgname"
+  chmod 755 "$pkgdir/usr/bin/$pkgname"
+
+  install -Dm644 packaging/aur/networthpanel.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
